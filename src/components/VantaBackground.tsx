@@ -91,6 +91,17 @@ export function VantaBackground() {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) return;
 
+    // Skip on small / low-power devices. Three.js + Vanta can exhaust the
+    // memory ceiling on iOS Safari and crash the page with "A problem
+    // repeatedly occurred." We render a CSS gradient fallback instead
+    // (see the empty container's parent styles).
+    const isSmallScreen = window.matchMedia('(max-width: 1024px)').matches;
+    const isLowMemory =
+      typeof (navigator as Navigator & { deviceMemory?: number }).deviceMemory === 'number' &&
+      ((navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8) < 4;
+    const isMobileUA = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isSmallScreen || isLowMemory || isMobileUA) return;
+
     const el = ref.current;
     let cancelled = false;
     let rafs: number[] = [];
@@ -171,7 +182,9 @@ export function VantaBackground() {
     <div
       ref={ref}
       aria-hidden
-      className="pointer-events-none absolute inset-0 -z-10 opacity-60 dark:opacity-50"
+      // The CSS fallback gradient renders when the effect bails (mobile,
+      // reduced-motion, low-memory) so the column is never just blank.
+      className="pointer-events-none absolute inset-0 -z-10 opacity-60 dark:opacity-50 bg-[radial-gradient(ellipse_at_top,_rgba(30,64,175,0.10),_transparent_60%)] dark:bg-[radial-gradient(ellipse_at_top,_rgba(122,176,255,0.08),_transparent_60%)]"
     />
   );
 }

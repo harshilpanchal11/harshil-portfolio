@@ -19,9 +19,9 @@ export function Hero() {
         </span>
       </h1>
       <p className="reveal mt-8 max-w-2xl text-lg md:text-xl leading-relaxed text-ink/80 dark:text-ink-dark/80">
-        {profile.headline} I work at the intersection of analytics, machine learning,
-        and business strategy — building systems that are defensible in front of
-        executives and useful to the people who run the business.
+        {profile.headline} I work where analytics, machine learning, and
+        business strategy overlap, building things that hold up in front of
+        executives and stay useful to the people running the business.
       </p>
       <div className="reveal mt-10 flex flex-wrap items-center gap-3">
         {profile.rolesTargeted.map((role) => (

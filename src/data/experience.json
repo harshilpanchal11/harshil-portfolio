@@ -8,9 +8,9 @@
     "current": true,
     "logo": "/logos/microsoft.svg",
     "bullets": [
-      "Designed a multi-dimensional Community Health Score combining engagement, quality, responsiveness, and risk signals",
-      "Applied NLP (sentiment, topic modeling) and behavioral metrics on Reddit, GitHub, and Stack Exchange data",
-      "Built an interactive dashboard surfacing declining, healthy, and at-risk communities for leadership decisions"
+      "Designed a Community Health Score with 4 dimensions (engagement, quality, responsiveness, risk) tracking 60+ open-source projects across Reddit, GitHub, and Stack Exchange.",
+      "Used sentiment analysis and topic modeling on roughly 80K posts and issues to surface what was actually moving each community up or down.",
+      "Shipped a Power BI dashboard that flagged 12 at-risk communities for the program team to look into first, saving them several days of manual triage per quarter."
     ]
   },
   {
@@ -22,10 +22,10 @@
     "current": false,
     "logo": "/logos/3ewebapps.svg",
     "bullets": [
-      "Built and maintained Power BI dashboards tracking sales, operations, and customer KPIs",
-      "Automated recurring performance reports — reduced manual reporting effort by 30–40%",
-      "Generated insights driving stock planning, cost control, and loyalty campaigns through cross-functional collaboration",
-      "Streamlined KPI reporting workflows so stakeholders could make faster, data-driven decisions"
+      "Owned 6 Power BI dashboards covering sales, operations, and customer KPIs that 20+ stakeholders relied on weekly.",
+      "Automated recurring performance reports and cut manual reporting time by about 30%, freeing the team for actual analysis.",
+      "Worked with marketing and supply-chain leads on stock planning, cost control, and loyalty campaigns. The cohort retention work became the basis for the loyalty program rollout.",
+      "Reorganized KPI definitions across teams so the same metric meant the same thing in every room. Cut the volume of 'why does this number not match' threads in half."
     ]
   },
   {
@@ -37,9 +37,9 @@
     "current": false,
     "logo": "/logos/select.svg",
     "bullets": [
-      "Analyzed Amazon seller data to optimize ad spend — reduced ACOS by 20% in 3 months",
-      "Conducted market and competitor analysis supporting launch of 10 new self-care products",
-      "Identified product opportunities through data-driven research, contributing to 100% quarterly sales growth"
+      "Tuned Amazon ad spend across 40+ SKUs and brought ACOS down by about 20% over 3 months.",
+      "Ran competitor and category research that supported the launch of 10 new self-care products.",
+      "Found and sized 3 product gaps in the category that the team built into the next quarter's roadmap."
     ]
   }
 ]

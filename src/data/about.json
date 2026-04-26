@@ -1,8 +1,8 @@
 {
-  "intro": "Master's student in Business Analytics at Purdue, with 1.5+ years building data-driven decision systems — from Power BI dashboards that drove operational visibility to multi-agent AI systems that automate corporate finance decisions.",
+  "intro": "I'm a Master's student in Business Analytics at Purdue with about a year and a half of industry experience. I've built dashboards that ran on the executive floor, models that recovered margin nobody knew was leaking, and most recently, multi-agent AI systems that automate the kind of reasoning a finance committee usually does in a room.",
   "paragraphs": [
-    "I'm a Master's student in Business Analytics at Purdue University with 1.5+ years of industry experience building data-driven decision systems — from Power BI dashboards that drove operational visibility, to multi-agent AI systems that automate corporate finance decisions.",
-    "I work at the intersection of analytics, machine learning, and business strategy. My favorite problems are the ones where the data is messy, the stakeholders disagree, and the answer needs to be defensible in a room full of executives."
+    "I'm a Master's student in Business Analytics at Purdue with about a year and a half of industry experience building data-driven decision systems. From Power BI dashboards that drove operational visibility, to multi-agent AI systems that automate corporate finance decisions.",
+    "My favorite problems are the ones where the data is messy, the stakeholders disagree, and the answer needs to be defensible in a room full of executives. I work at the intersection of analytics, machine learning, and business strategy."
   ],
   "quickFacts": [
     { "label": "Studying", "value": "MS Business Analytics, Purdue (Dec 2026)" },
@@ -11,7 +11,7 @@
   ],
   "stats": [
     { "value": "1.5+", "unit": "years", "label": "Industry experience" },
-    { "value": "$557K", "unit": "", "label": "Largest measured impact" },
+    { "value": "30%", "unit": "", "label": "Reporting time saved at last role" },
     { "value": "1M+", "unit": "rows", "label": "Largest dataset shipped" },
     { "value": "5", "unit": "", "label": "End-to-end projects" }
   ]

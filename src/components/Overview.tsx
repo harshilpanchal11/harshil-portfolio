@@ -6,10 +6,10 @@ import { BarChart3, LineChart, Lightbulb, Brain } from 'lucide-react';
  * eyebrow + huge headline + short bio + role cards with line icons.
  */
 const ROLES = [
-  { title: 'Business Analyst',     icon: BarChart3, blurb: 'Translating messy data into decisions stakeholders can defend.' },
-  { title: 'Data Analyst',         icon: LineChart, blurb: 'SQL, Python, and dashboards that make patterns obvious.' },
-  { title: 'Analytics Consultant', icon: Lightbulb, blurb: 'Framing the right problem before reaching for the model.' },
-  { title: 'Applied AI Engineer',  icon: Brain,     blurb: 'LangGraph multi-agent systems & ML pipelines in production.' },
+  { title: 'Business Analyst',     icon: BarChart3, blurb: 'Turning messy data into decisions stakeholders can defend.' },
+  { title: 'Data Analyst',         icon: LineChart, blurb: 'SQL, Python, and dashboards that make the pattern obvious.' },
+  { title: 'Analytics Consultant', icon: Lightbulb, blurb: 'Framing the right question before reaching for the model.' },
+  { title: 'Applied AI Engineer',  icon: Brain,     blurb: 'LangGraph multi-agent systems and ML pipelines that ship.' },
 ];
 
 export function Overview() {

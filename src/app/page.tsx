@@ -26,8 +26,8 @@ export default function HomePage() {
           <VantaBackground />
           <Hero />
           <Overview />
-          <Experience />
           <Projects />
+          <Experience />
           <Skills />
           <ToolsStrip />
           <Contact />
