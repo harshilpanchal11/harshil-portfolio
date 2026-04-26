@@ -42,8 +42,23 @@ export function SmoothScroll() {
     }
     document.addEventListener('click', onAnchorClick);
 
+    // If we land on the page with a hash already in the URL (e.g. user
+    // navigated from /projects/[slug] back to /#projects), Next.js App
+    // Router's auto-scroll-to-anchor is unreliable. Force it ourselves
+    // after a small delay so layout has settled.
+    function scrollToInitialHash() {
+      const hash = window.location.hash;
+      if (!hash || hash.length < 2) return;
+      const id = hash.slice(1);
+      const el = document.getElementById(id);
+      if (!el) return;
+      lenis.scrollTo(el, { offset: -16, duration: 0.001, immediate: true });
+    }
+    const hashTimer = window.setTimeout(scrollToInitialHash, 80);
+
     return () => {
       cancelAnimationFrame(id);
+      window.clearTimeout(hashTimer);
       document.removeEventListener('click', onAnchorClick);
       lenis.destroy();
     };

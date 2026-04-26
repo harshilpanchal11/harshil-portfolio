@@ -5,29 +5,29 @@ import { useEffect } from 'react';
 /**
  * Reveal-on-scroll system.
  *
- * Pre-existing bug: on back-navigation from a project page, the right column
- * appeared empty. Cause: the `.reveal` baseline style is opacity: 0, and we
- * were depending entirely on IntersectionObserver callbacks to add
- * `.is-visible`. After a back-nav, the browser restores scroll position
- * synchronously, and any elements above the restored scroll position never
- * fire an intersection event (they're already past the viewport). They stayed
- * hidden forever.
+ * The naive approach is "listen for IntersectionObserver, add `.is-visible`."
+ * That breaks in three real-world scenarios:
  *
- * The fix has three layers, in order of robustness:
+ *  A) **Back-navigation with restored scroll position.** The browser jumps to
+ *     a mid-page scroll position before any JS runs. Elements above the
+ *     restored position never re-enter the viewport, so the observer never
+ *     fires for them, and they stay at opacity:0 forever.
+ *  B) **Hash navigation (e.g. /#projects).** Next.js App Router routes the
+ *     navigation, then the browser scrolls to the anchor — sometimes *after*
+ *     the page mounts. Our synchronous pass at mount sees the wrong viewport,
+ *     misses the section the user actually landed on.
+ *  C) **iOS Safari bfcache restore.** Effects don't always re-run.
  *
- * 1. **Synchronous initial pass.** On mount we walk every reveal target,
- *    measure its bounding rect, and mark anything currently in-viewport OR
- *    already scrolled past as visible. This eliminates the "back-nav blank
- *    column" failure mode.
- * 2. **IntersectionObserver for the rest.** Anything still below the viewport
- *    is observed and revealed when it scrolls into view, with re-trigger
- *    behaviour preserved for elements that scroll back into view.
- * 3. **Safety timer.** If anything is still hidden 1500ms after mount (e.g.
- *    IO never fires for some reason), force it visible. Worst case: animation
- *    is skipped, but content is never invisible.
+ * Defense layers, in order:
  *
- * Also handles the iOS Safari `pageshow` event for bfcache restores, where
- * neither the React effect nor IO might re-fire reliably.
+ *  1. Synchronous pass on mount: anything currently in or above the viewport
+ *     gets `.is-visible` immediately. No waiting on IO.
+ *  2. Repeat the pass at 0ms / 100ms / 500ms timeouts. Catches the case
+ *     where the browser scrolls to a hash *after* mount.
+ *  3. One-shot scroll listener that runs the pass on the first scroll event.
+ *  4. IntersectionObserver for everything below the viewport (normal flow).
+ *  5. Safety timer at 1500ms force-shows anything still hidden.
+ *  6. `pageshow` handler for bfcache restores.
  */
 export function RevealOnScroll() {
   useEffect(() => {
@@ -42,7 +42,6 @@ export function RevealOnScroll() {
       return;
     }
 
-    // ---- Layer 1: synchronous initial pass -----------------------------
     function markInitiallyVisible() {
       const vh = window.innerHeight;
       targets.forEach((el) => {
@@ -55,9 +54,25 @@ export function RevealOnScroll() {
         }
       });
     }
+
+    // ---- Layer 1: immediate pass ----------------------------------------
     markInitiallyVisible();
 
-    // ---- Layer 2: IntersectionObserver for elements still below view ----
+    // ---- Layer 2: repeated passes to catch hash-scroll timing -----------
+    const t1 = window.setTimeout(markInitiallyVisible, 100);
+    const t2 = window.setTimeout(markInitiallyVisible, 300);
+    const t3 = window.setTimeout(markInitiallyVisible, 600);
+
+    // ---- Layer 3: scroll listener (catches any scroll, browser or Lenis)
+    let scrollFired = false;
+    function onScroll() {
+      if (scrollFired) return;
+      scrollFired = true;
+      markInitiallyVisible();
+    }
+    window.addEventListener('scroll', onScroll, { passive: true, once: true });
+
+    // ---- Layer 4: IntersectionObserver for below-viewport elements ------
     const exited = new WeakSet<Element>();
     const observer = new IntersectionObserver(
       (entries) => {
@@ -78,7 +93,7 @@ export function RevealOnScroll() {
     );
     targets.forEach((el) => observer.observe(el));
 
-    // ---- Layer 3: safety timer ------------------------------------------
+    // ---- Layer 5: safety net --------------------------------------------
     const safety = window.setTimeout(() => {
       targets.forEach((el) => {
         if (!el.classList.contains('is-visible')) {
@@ -87,17 +102,19 @@ export function RevealOnScroll() {
       });
     }, 1500);
 
-    // ---- bfcache restore (iOS Safari): re-run the synchronous pass ------
+    // ---- Layer 6: bfcache restore ---------------------------------------
     function onPageShow(e: PageTransitionEvent) {
-      if (e.persisted) {
-        markInitiallyVisible();
-      }
+      if (e.persisted) markInitiallyVisible();
     }
     window.addEventListener('pageshow', onPageShow);
 
     return () => {
       observer.disconnect();
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+      window.clearTimeout(t3);
       window.clearTimeout(safety);
+      window.removeEventListener('scroll', onScroll);
       window.removeEventListener('pageshow', onPageShow);
     };
   }, []);
