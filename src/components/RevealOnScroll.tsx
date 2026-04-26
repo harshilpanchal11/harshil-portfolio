@@ -3,31 +3,23 @@
 import { useEffect } from 'react';
 
 /**
- * Reveal-on-scroll system.
+ * Reveal-on-scroll system, paired with the visibility-by-default CSS in
+ * globals.css. The CSS keeps all content visible regardless of what JS
+ * does, so this code can only ADD animation, never hide content.
  *
- * The naive approach is "listen for IntersectionObserver, add `.is-visible`."
- * That breaks in three real-world scenarios:
+ * Flow:
+ *   1. On mount, walk every `.reveal` element. Anything BELOW the current
+ *      viewport gets `.reveal-pending` added so it hides for the upcoming
+ *      animation. Everything else gets `.is-visible` added immediately so
+ *      it's visible (with no animation).
+ *   2. `.reveal-mask` and `.reveal-stagger` elements in viewport get
+ *      `.is-visible` immediately to play their entrance animation.
+ *   3. An IntersectionObserver watches every reveal target. When something
+ *      crosses into view, `.is-visible` is added (animation plays).
+ *   4. Safety timer: anything still pending after 1500ms gets force-shown.
  *
- *  A) **Back-navigation with restored scroll position.** The browser jumps to
- *     a mid-page scroll position before any JS runs. Elements above the
- *     restored position never re-enter the viewport, so the observer never
- *     fires for them, and they stay at opacity:0 forever.
- *  B) **Hash navigation (e.g. /#projects).** Next.js App Router routes the
- *     navigation, then the browser scrolls to the anchor — sometimes *after*
- *     the page mounts. Our synchronous pass at mount sees the wrong viewport,
- *     misses the section the user actually landed on.
- *  C) **iOS Safari bfcache restore.** Effects don't always re-run.
- *
- * Defense layers, in order:
- *
- *  1. Synchronous pass on mount: anything currently in or above the viewport
- *     gets `.is-visible` immediately. No waiting on IO.
- *  2. Repeat the pass at 0ms / 100ms / 500ms timeouts. Catches the case
- *     where the browser scrolls to a hash *after* mount.
- *  3. One-shot scroll listener that runs the pass on the first scroll event.
- *  4. IntersectionObserver for everything below the viewport (normal flow).
- *  5. Safety timer at 1500ms force-shows anything still hidden.
- *  6. `pageshow` handler for bfcache restores.
+ * Because the CSS default is "visible", a complete JS failure here just
+ * means animations don't play. Content never disappears.
  */
 export function RevealOnScroll() {
   useEffect(() => {
@@ -42,37 +34,42 @@ export function RevealOnScroll() {
       return;
     }
 
-    function markInitiallyVisible() {
+    function classify() {
       const vh = window.innerHeight;
       targets.forEach((el) => {
         const rect = el.getBoundingClientRect();
-        // In viewport now, or already scrolled past it. Either way, show it.
-        if (rect.top < vh && rect.bottom > -50) {
+        const isAboveViewport = rect.bottom <= 0;
+        const isInViewport = rect.top < vh && rect.bottom > 0;
+        const isBelowViewport = rect.top >= vh;
+
+        if (isAboveViewport || isInViewport) {
+          // Ensure visible. Don't add reveal-pending — content shouldn't
+          // hide for elements the user is already looking at or has passed.
+          el.classList.remove('reveal-pending');
           el.classList.add('is-visible');
-        } else if (rect.bottom <= -50) {
-          el.classList.add('is-visible');
+        } else if (isBelowViewport && el.classList.contains('reveal') && !el.classList.contains('is-visible')) {
+          // Hide for animation later.
+          el.classList.add('reveal-pending');
         }
       });
     }
 
-    // ---- Layer 1: immediate pass ----------------------------------------
-    markInitiallyVisible();
+    // Multi-pass: catches the case where the browser scrolls to a hash
+    // *after* the component mounts (Next.js App Router timing).
+    classify();
+    const passes = [80, 200, 400, 800].map((ms) => window.setTimeout(classify, ms));
 
-    // ---- Layer 2: repeated passes to catch hash-scroll timing -----------
-    const t1 = window.setTimeout(markInitiallyVisible, 100);
-    const t2 = window.setTimeout(markInitiallyVisible, 300);
-    const t3 = window.setTimeout(markInitiallyVisible, 600);
-
-    // ---- Layer 3: scroll listener (catches any scroll, browser or Lenis)
+    // First-scroll catcher: any scroll motion re-runs the classifier so
+    // hash-scroll lands hit the correct viewport.
     let scrollFired = false;
     function onScroll() {
       if (scrollFired) return;
       scrollFired = true;
-      markInitiallyVisible();
+      classify();
     }
     window.addEventListener('scroll', onScroll, { passive: true, once: true });
 
-    // ---- Layer 4: IntersectionObserver for below-viewport elements ------
+    // Observer for new sections scrolling into view.
     const exited = new WeakSet<Element>();
     const observer = new IntersectionObserver(
       (entries) => {
@@ -83,6 +80,7 @@ export function RevealOnScroll() {
               void (entry.target as HTMLElement).offsetWidth;
               exited.delete(entry.target);
             }
+            entry.target.classList.remove('reveal-pending');
             entry.target.classList.add('is-visible');
           } else if (entry.boundingClientRect.top > window.innerHeight) {
             exited.add(entry.target);
@@ -93,26 +91,23 @@ export function RevealOnScroll() {
     );
     targets.forEach((el) => observer.observe(el));
 
-    // ---- Layer 5: safety net --------------------------------------------
+    // Safety net.
     const safety = window.setTimeout(() => {
       targets.forEach((el) => {
-        if (!el.classList.contains('is-visible')) {
-          el.classList.add('is-visible');
-        }
+        el.classList.remove('reveal-pending');
+        el.classList.add('is-visible');
       });
     }, 1500);
 
-    // ---- Layer 6: bfcache restore ---------------------------------------
+    // bfcache restore (iOS Safari).
     function onPageShow(e: PageTransitionEvent) {
-      if (e.persisted) markInitiallyVisible();
+      if (e.persisted) classify();
     }
     window.addEventListener('pageshow', onPageShow);
 
     return () => {
       observer.disconnect();
-      window.clearTimeout(t1);
-      window.clearTimeout(t2);
-      window.clearTimeout(t3);
+      passes.forEach((id) => window.clearTimeout(id));
       window.clearTimeout(safety);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('pageshow', onPageShow);

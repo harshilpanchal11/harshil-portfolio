@@ -42,21 +42,43 @@ html.dark ::selection {
 }
 
 /* ---------- Reveal-on-scroll system ----------------------------------- */
-/* Default: subtle fade-up + slight scale. Tuned for a modern, restrained feel. */
-.reveal {
+/*
+ * IMPORTANT — visibility-by-default architecture.
+ *
+ * Earlier versions hid `.reveal` content until JS added `.is-visible`. That
+ * was load-bearing: if the JS path failed for any reason (back-navigation
+ * timing, hash scroll race, bfcache restore, hydration glitch), the page
+ * stayed blank. Bug seen in production.
+ *
+ * Fix: `.reveal` is visible by default. Animations only run if JS adds the
+ * opt-in `.reveal-pending` class first. Worst case, no animation. Never
+ * blank content.
+ *
+ * Below-viewport elements get `.reveal-pending` added by JS so they hide
+ * temporarily, then `.is-visible` triggers the transition into the visible
+ * resting state.
+ */
+
+/* Default: visible. */
+.reveal { /* nothing — visibility is the safe default */ }
+
+/* JS opt-in hide. Only applies if both `.reveal` and `.reveal-pending` are present. */
+.reveal.reveal-pending {
   opacity: 0;
   transform: translateY(22px) scale(0.985);
-  transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1),
-              transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform, opacity;
 }
+
+/* JS opt-in show with transition. */
+.reveal.reveal-pending.is-visible,
 .reveal.is-visible {
   opacity: 1;
   transform: translateY(0) scale(1);
+  transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Stagger children when applied to a container — each direct child fades
- * up sequentially after the parent. Used implicitly via grids and lists. */
+ * up sequentially after the parent gets `.is-visible`. */
 .reveal-stagger.is-visible > * {
   animation: reveal-fade-up 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -76,10 +98,7 @@ html.dark ::selection {
   100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Headline mask wipe — used on big section h2's via the `.reveal-mask` class.
- * Steady state is fully visible. When the observer adds `.is-visible`, the
- * mask wipe animation plays from clipped → fully unclipped. This keeps text
- * readable even if the IntersectionObserver is late or blocked. */
+/* Headline mask wipe — visible by default, animates only on `.is-visible`. */
 .reveal-mask {
   display: block;
   will-change: clip-path, transform;
@@ -96,6 +115,7 @@ html.dark ::selection {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal,
+  .reveal.reveal-pending,
   .reveal-stagger.is-visible > *,
   .reveal-mask {
     opacity: 1 !important;
