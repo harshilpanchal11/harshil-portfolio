@@ -1,0 +1,115 @@
+[
+  {
+    "slug": "airbnb-host-retention",
+    "title": "Airbnb Host Retention Optimization",
+    "subtitle": "Allocating $1,000 retention gifts to maximize profit, not accuracy",
+    "year": "2025",
+    "domain": "Marketplace Analytics",
+    "featured": true,
+    "image": "airbnb1.jpeg",
+    "headlineMetric": { "value": "+$557K", "label": "platform profit uplift on a 1,312-host test set" },
+    "summary": "Built a profit-aware decision system that increased net profit by $557K by gifting only the 23.4% of hosts where retention dollars actually pay back.",
+    "problem": "Airbnb wanted to send $1,000 gifts to hosts at risk of leaving the platform. The trap: a high-accuracy churn model isn't the same as a profitable intervention. Gifting low-revenue hosts loses money even if you correctly predict they'll churn.",
+    "approach": [
+      "Engineered features from 12-month reservation trends, revenue projections, and K-Means geographic clustering (20 clusters)",
+      "Trained a CatBoost ensemble across 8 random seeds with 5-fold cross-validation",
+      "Applied isotonic calibration to convert model scores into honest probability estimates",
+      "Optimized a profit threshold (τ* = $1,082.96): gift only when attrition_probability × annual_profit exceeds threshold"
+    ],
+    "tools": ["Python 3.12", "CatBoost", "scikit-learn", "Pandas", "NumPy", "Plotly", "Google Colab"],
+    "insights": [
+      "Gifting only 307 of 1,312 hosts (23.4%) outperforms gifting everyone or no one",
+      "The profit-at-risk framing prioritizes high-revenue at-risk hosts over equally-likely-to-churn low-revenue hosts",
+      "Geographic clustering meaningfully improved feature signal beyond raw lat/lon"
+    ],
+    "impact": "Increased projected platform profit from $5,239,448 to $5,796,773 — a +$557,325 uplift, or ~10.6% on the 1,312-host test set. Model AUC was 0.9025, but the real win was reframing the objective from accuracy to dollars.",
+    "links": {
+      "github": "https://github.com/harshilpanchal11/airbnb-host-retention-optimization"
+    }
+  },
+  {
+    "slug": "customer-segmentation-churn",
+    "title": "Customer Segmentation & Churn Prediction",
+    "subtitle": "Identifying the 28% of customers who drive 83% of revenue",
+    "year": "2025",
+    "domain": "Retail Analytics",
+    "featured": true,
+    "image": "segmentation.png",
+    "headlineMetric": { "value": "82.8%", "label": "of revenue concentrated in top 28.9% of customers" },
+    "summary": "Segmented 5,878 customers from 779K transactions using RFM features and predicted churn risk to enable targeted retention campaigns.",
+    "problem": "An online retailer needed to know which customers to invest retention dollars in. Treating all customers the same wastes budget; treating them by gut feel misses revenue. The task was to segment customers by value and behavior, then predict who was likely to churn.",
+    "approach": [
+      "Cleaned 1.07M transactions (UCI Online Retail II) down to 779,425 rows across 5,878 customers",
+      "Engineered 13 customer-level features blending RFM (Recency, Frequency, Monetary) with behavioral and temporal signals",
+      "Ran K-Means with silhouette analysis to settle on 3 segments (silhouette = 0.5748)",
+      "Built a churn classifier on top of the segments to flag at-risk customers"
+    ],
+    "tools": ["Apache Spark", "Spark MLlib", "MLflow", "Databricks", "Unity Catalog", "Python"],
+    "insights": [
+      "1,700 'High-Value Loyal' customers (28.9%) drive 82.8% of revenue — average spend £8,467",
+      "2,342 'Growth/Mid-Tier' customers represent the highest conversion opportunity",
+      "1,836 'At-Risk/Dormant' customers contribute only 5.9% of revenue — win-back ROI must be carefully scoped"
+    ],
+    "impact": "The segmentation enables retention spend to be concentrated on high-value customers rather than spread thin, and the churn model (AUC-ROC 0.7716) gives marketing a prioritized list to act on weekly.",
+    "links": {
+      "github": "https://github.com/harshilpanchal11/Customer_Segmentation-And-Churn_Prediction-For-Online_Retailer"
+    }
+  },
+  {
+    "slug": "multi-agent-finance",
+    "title": "Multi-Agent Financial Decision System",
+    "subtitle": "AI agents that simulate a finance committee",
+    "year": "2025",
+    "domain": "Applied AI / Corporate Finance",
+    "featured": true,
+    "image": "multiagent.jpeg",
+    "headlineMetric": { "value": "~30%", "label": "of reasoning errors caught by adversarial agent review" },
+    "summary": "Built a LangGraph system coordinating Strategy, Risk, Finance, and Modeling agents to produce scenario-based corporate finance recommendations.",
+    "problem": "Corporate finance decisions (build vs. buy, capacity expansion, investment sizing) require multiple lenses — strategic fit, risk tolerance, financial returns, modeling rigor — that humans usually run in silos. Single-LLM approaches collapse this into one voice and lose the adversarial check.",
+    "approach": [
+      "Architected a LangGraph state machine with four specialized agents: Strategy, Risk, Finance, and Modeling",
+      "Added an assumption-governance layer so each agent's inputs are explicit and traceable",
+      "Implemented adversarial Risk review: every recommendation gets stress-tested before being surfaced",
+      "Generated three-scenario outputs (Downside / Base / Upside) plus sensitivity analyses on key drivers",
+      "Built evaluation metrics for decision-quality (consistency, traceability, adversarial coverage)"
+    ],
+    "tools": ["Python", "LangGraph", "LangChain", "TypeScript", "OpenAI API"],
+    "insights": [
+      "Adversarial agent review caught reasoning errors that a single-pass LLM missed in ~30% of test cases",
+      "Forcing explicit assumption declaration made the model's outputs auditable in a way single-prompt approaches aren't",
+      "Three-scenario output (vs. point estimate) shifts the conversation from 'what's the answer' to 'where's the risk'"
+    ],
+    "impact": "Produces go/no-go recommendations with the structure of a real finance committee memo — explicit assumptions, scenario sensitivity, and risk flags — at a fraction of the time. Demonstrates how multi-agent systems can encode consulting-style structured thinking.",
+    "links": {
+      "github": "https://github.com/harshilpanchal11/MultiDecision-Corporate-FinancialAnalysis-System"
+    }
+  },
+  {
+    "slug": "bankruptcy-ensemble",
+    "title": "Bankruptcy Prediction Ensemble",
+    "subtitle": "Stacked gradient-boosting model for financial distress",
+    "year": "2024",
+    "domain": "Financial Risk / ML",
+    "featured": true,
+    "image": "bankruptcy-ensemble.png",
+    "headlineMetric": { "value": "0.9056", "label": "AUC stacked ensemble on 8K companies × 64 ratios" },
+    "summary": "Two-level stacking ensemble (LightGBM + XGBoost + CatBoost → Logistic Regression) reaching 0.9056 AUC on 8,000 companies × 64 financial ratios.",
+    "problem": "Predict whether a company will go bankrupt from 64 anonymized financial ratios — a high-stakes binary classification problem where false negatives are expensive (missed defaults) and false positives are expensive (over-conservative lending).",
+    "approach": [
+      "Built a missing-value-aware pipeline: binary null flags + median imputation + robust (IQR) scaling",
+      "Added 5 PCA components and 10 interaction terms to capture non-linear feature relationships",
+      "Bayesian-tuned three base learners (LightGBM, XGBoost, CatBoost) with 5-fold stratified CV",
+      "Stacked out-of-fold predictions through a regularized Logistic Regression meta-learner (C=0.1) to prevent leakage"
+    ],
+    "tools": ["Python 3.12", "LightGBM", "XGBoost", "CatBoost", "scikit-learn", "Pandas", "NumPy", "Plotly"],
+    "insights": [
+      "Stacked ensemble (0.9056 AUC) beat best base learner (LightGBM 0.9042) — small but real gain",
+      "Engineered missingness flags were among the top features — informative missingness mattered",
+      "Robust scaling outperformed standard scaling on this dataset's heavy-tailed ratios"
+    ],
+    "impact": "Demonstrates that ensemble stacking adds value even when base learners are already strong, and that careful feature engineering (especially around missingness) often beats marginal model tuning.",
+    "links": {
+      "github": "https://github.com/harshilpanchal11/bankruptcy-prediction-ensemble"
+    }
+  }
+]

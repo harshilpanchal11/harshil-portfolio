@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: #FAFAF7;
+  color: #111111;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+html.dark body {
+  background-color: #0A1426;
+  color: #E8EEF7;
+  background-image: radial-gradient(
+    ellipse 80% 50% at 50% -20%,
+    rgba(122, 176, 255, 0.06),
+    transparent 70%
+  );
+  background-attachment: fixed;
+}
+
+::selection {
+  background-color: rgba(30, 64, 175, 0.18);
+}
+
+html.dark ::selection {
+  background-color: rgba(122, 176, 255, 0.25);
+}
+
+/* ---------- Reveal-on-scroll system ----------------------------------- */
+/* Default: subtle fade-up + slight scale. Tuned for a modern, restrained feel. */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px) scale(0.985);
+  transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, opacity;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Stagger children when applied to a container — each direct child fades
+ * up sequentially after the parent. Used implicitly via grids and lists. */
+.reveal-stagger.is-visible > * {
+  animation: reveal-fade-up 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.reveal-stagger.is-visible > *:nth-child(1) { animation-delay: 60ms; }
+.reveal-stagger.is-visible > *:nth-child(2) { animation-delay: 140ms; }
+.reveal-stagger.is-visible > *:nth-child(3) { animation-delay: 220ms; }
+.reveal-stagger.is-visible > *:nth-child(4) { animation-delay: 300ms; }
+.reveal-stagger.is-visible > *:nth-child(5) { animation-delay: 380ms; }
+.reveal-stagger.is-visible > *:nth-child(6) { animation-delay: 460ms; }
+.reveal-stagger.is-visible > *:nth-child(7) { animation-delay: 540ms; }
+.reveal-stagger.is-visible > *:nth-child(8) { animation-delay: 620ms; }
+.reveal-stagger.is-visible > *:nth-child(9) { animation-delay: 700ms; }
+.reveal-stagger.is-visible > *:nth-child(10) { animation-delay: 780ms; }
+
+@keyframes reveal-fade-up {
+  0%   { opacity: 0; transform: translateY(18px) scale(0.985); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Headline mask wipe — used on big section h2's via the `.reveal-mask` class.
+ * Steady state is fully visible. When the observer adds `.is-visible`, the
+ * mask wipe animation plays from clipped → fully unclipped. This keeps text
+ * readable even if the IntersectionObserver is late or blocked. */
+.reveal-mask {
+  display: block;
+  will-change: clip-path, transform;
+}
+.reveal-mask.is-visible {
+  animation: reveal-mask-wipe 1100ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes reveal-mask-wipe {
+  0%   { clip-path: inset(0 0 100% 0); transform: translateY(0.35em); }
+  100% { clip-path: inset(0 0 0 0);    transform: translateY(0); }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal,
+  .reveal-stagger.is-visible > *,
+  .reveal-mask {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+    clip-path: none !important;
+  }
+}

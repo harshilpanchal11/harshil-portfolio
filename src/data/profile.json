@@ -1,0 +1,25 @@
+{
+  "name": "Harshil Panchal",
+  "tagline": "Business analytics professional turning messy data into decisions.",
+  "headline": "I build analytics products that move business metrics — dashboards, ML models, and AI systems.",
+  "location": "West Lafayette, IN",
+  "email": "harshilpanchal355@gmail.com",
+  "phone": "765-532-7381",
+  "linkedin": "https://www.linkedin.com/in/harshil-panchal355/",
+  "github": "https://github.com/harshilpanchal11",
+  "resumeUrl": "/resume.pdf",
+  "scheduleUrl": "http://calendly.com/harshilpanchal355",
+  "availability": "Open to full-time analytics, data, and consulting roles starting May 2026.",
+  "availabilityShort": "Open to new work",
+  "timezone": "America/Indiana/Indianapolis",
+  "rolesTargeted": [
+    "Business Analyst",
+    "Data Analyst",
+    "Analytics Consultant",
+    "Applied AI Engineer"
+  ],
+  "title": "Data Professional",
+  "photo": "/photo.jpg",
+  "education": "MS, Purdue University",
+  "languages": ["English", "Hindi"]
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "category": "Analytics & BI",
+    "items": ["Power BI", "Excel (advanced)", "Tableau", "Google Sheets", "DAX", "Looker Studio"]
+  },
+  {
+    "category": "Data & Databases",
+    "items": ["SQL", "BigQuery", "MongoDB", "NoSQL", "ETL pipelines", "Data modeling"]
+  },
+  {
+    "category": "Programming",
+    "items": ["Python", "TypeScript", "R", "Pandas", "NumPy", "Scikit-learn"]
+  },
+  {
+    "category": "ML & AI",
+    "items": ["Predictive modeling", "NLP", "LangGraph", "Multi-agent systems", "Embeddings", "Explainable AI", "Feature engineering"]
+  },
+  {
+    "category": "Cloud",
+    "items": ["AWS (S3, Lambda, Redshift)", "Google Cloud", "Azure AI Fundamentals", "Databricks"]
+  },
+  {
+    "category": "Methods",
+    "items": ["A/B testing", "RFM analysis", "Cohort analysis", "Sensitivity analysis", "IT project management"]
+  }
+]

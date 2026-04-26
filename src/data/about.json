@@ -1,0 +1,18 @@
+{
+  "intro": "Master's student in Business Analytics at Purdue, with 1.5+ years building data-driven decision systems — from Power BI dashboards that drove operational visibility to multi-agent AI systems that automate corporate finance decisions.",
+  "paragraphs": [
+    "I'm a Master's student in Business Analytics at Purdue University with 1.5+ years of industry experience building data-driven decision systems — from Power BI dashboards that drove operational visibility, to multi-agent AI systems that automate corporate finance decisions.",
+    "I work at the intersection of analytics, machine learning, and business strategy. My favorite problems are the ones where the data is messy, the stakeholders disagree, and the answer needs to be defensible in a room full of executives."
+  ],
+  "quickFacts": [
+    { "label": "Studying", "value": "MS Business Analytics, Purdue (Dec 2026)" },
+    { "label": "Based in", "value": "West Lafayette, IN" },
+    { "label": "Open to", "value": "Full-time analytics & consulting roles" }
+  ],
+  "stats": [
+    { "value": "1.5+", "unit": "years", "label": "Industry experience" },
+    { "value": "$557K", "unit": "", "label": "Largest measured impact" },
+    { "value": "1M+", "unit": "rows", "label": "Largest dataset shipped" },
+    { "value": "5", "unit": "", "label": "End-to-end projects" }
+  ]
+}

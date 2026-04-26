@@ -1,0 +1,5 @@
+[
+  { "name": "AWS Certified Cloud Practitioner", "issuer": "Amazon Web Services" },
+  { "name": "Microsoft Azure AI Data Fundamentals", "issuer": "Microsoft" },
+  { "name": "Research paper — Bias-Variance trade-off in ML algorithms", "issuer": "Peer-reviewed journal", "type": "publication" }
+]

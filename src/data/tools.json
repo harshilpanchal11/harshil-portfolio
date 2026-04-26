@@ -1,0 +1,12 @@
+[
+  { "name": "Python",        "logo": "python",       "color": "#3776AB" },
+  { "name": "SQL",           "logo": "/logos/tools/sql.svg",     "color": "#0064A5" },
+  { "name": "Power BI",      "logo": "/logos/tools/powerbi.svg", "color": "#F2C811" },
+  { "name": "Tableau",       "logo": "/logos/tools/tableau.svg", "color": "#E97627" },
+  { "name": "AWS",           "logo": "/logos/tools/aws.svg",     "color": "#FF9900" },
+  { "name": "Google Cloud",  "logo": "googlecloud",  "color": "#4285F4" },
+  { "name": "MongoDB",       "logo": "mongodb",      "color": "#47A248" },
+  { "name": "Databricks",    "logo": "databricks",   "color": "#FF3621" },
+  { "name": "scikit-learn",  "logo": "scikitlearn",  "color": "#F7931E" },
+  { "name": "LangChain",     "logo": "langchain",    "color": "#1C3C3C" }
+]
