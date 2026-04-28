@@ -27,10 +27,10 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: `${profile.name} — Business Analytics`,
+  title: `${profile.name}`,
   description: profile.headline,
   openGraph: {
-    title: `${profile.name} — Business Analytics`,
+    title: `${profile.name}`,
     description: profile.headline,
     type: 'website',
   },
